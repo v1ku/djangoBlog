@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
-from .forms import PostForm,EditForm
+from .models import Post, Comment
+from .forms import PostForm,EditForm,CommentForm
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 
@@ -43,3 +43,11 @@ def LikeView(request, pk):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
     post.likes.add(request.user)
     return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
+
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'add_comment.html'
+    def form_valid(self,form):
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)

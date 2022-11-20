@@ -30,6 +30,32 @@
 <hr>
 <br/>
 
+<h2> Comments</h2>
+{% if not post.comments.all %}
+    <p> No comments yet. </p>
+    <a href="{% url 'add_comment' post.pk %}"> Add One </a>
+{% else %}
+    <a href="{% url 'add_comment' post.pk %}"> Add a comment </a>
+    <br>
+    {% for comment in post.comments.all %}
+        <p> {{ comment.body }} </p>
+        <small> By: {{ comment.name }} </small>
+        <br>
+        <small> Date added: {{ comment.date_added}} </small>
+        <br/>
+        <hr>
+        <br/>
+    {% endfor %}
+{% endif %}
+<br><br/>
+<form action="{% url 'like_post' post.pk %}" method="POST">
+    {% csrf_token %}
+    <button type="submit", name = "post_id", value = "{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
+    - {{total_likes}} Likes
+<br><br/>
+<hr>
+<br/>
+
 
 
 <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
